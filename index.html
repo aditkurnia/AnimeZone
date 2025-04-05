@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeZone - Watch Anime Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary-red: #e50914;
+            --dark-red: #b81d24;
+            --lighter-red: #ff3d47;
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --light-text: #f5f5f5;
+            --gray-text: #a9a9a9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--darker-bg);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links li a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links li a:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-links li a.active {
+            color: var(--primary-red);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light-text);
+        }
+
+        /* Search and Filter Section */
+        .search-filter-container {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 20px 0;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .search-filter-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--gray-text);
+        }
+
+        .search-button {
+            padding: 0 15px;
+            background-color: var(--primary-red);
+            color: var(--light-text);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: var(--dark-red);
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-button {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            border: 1px solid #333;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-button.active {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+
+        /* Featured Anime Section */
+        .featured-anime {
+            margin: 30px 0;
+            position: relative;
+            height: 400px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .featured-anime img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .featured-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, var(--darker-bg));
+        }
+
+        .featured-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .featured-desc {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: var(--gray-text);
+        }
+
+        .watch-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-red);
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .watch-button:hover {
+            background-color: var(--dark-red);
+        }
+
+        /* Anime Grid Section */
+        .section-title {
+            font-size: 1.5rem;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .anime-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .anime-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .anime-card-image {
+            position: relative;
+            height: 320px;
+        }
+
+        .anime-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .anime-card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .anime-card:hover .anime-card-overlay {
+            opacity: 1;
+        }
+
+        .anime-card-overlay i {
+            font-size: 3rem;
+            color: var(--primary-red);
+        }
+
+        .anime-card-info {
+            padding: 15px;
+        }
+
+        .anime-card-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .anime-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--gray-text);
+        }
+
+        .anime-card-genre {
+            color: var(--primary-red);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--darker-bg);
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-decoration: none;
+        }
+
+        .footer-logo i {
+            margin-right: 8px;
+            font-size: 1.8rem;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--light-text);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links li a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links li a:hover {
+            color: var(--primary-red);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            color: var(--light-text);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-red);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background-color: var(--darker-bg);
+                padding: 20px 0;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .featured-anime {
+                height: 300px;
+            }
+
+            .featured-title {
+                font-size: 1.5rem;
+            }
+
+            .anime-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .anime-card-image {
+                height: 200px;
+            }
+
+            .search-filter-wrapper {
+                flex-direction: column;
+            }
+
+            .filter-container {
+                overflow-x: auto;
+                padding-bottom: 10px;
+                flex-wrap: nowrap;
+            }
+
+            .filter-button {
+                white-space: nowrap;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .featured-anime {
+                height: 250px;
+            }
+
+            .anime-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .anime-card-image {
+                height: 180px;
+            }
+
+            .anime-card-info {
+                padding: 10px;
+            }
+
+            .anime-card-title {
+                font-size: 0.9rem;
+            }
+
+            .anime-card-meta {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="bi bi-play-circle-fill"></i>
+                AnimeZone
+            </a>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">Series</a></li>
+                <li><a href="#">New Releases</a></li>
+                <li><a href="#">My List</a></li>
+            </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="bi bi-list"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Search and Filter Section -->
+        <div class="search-filter-container">
+            <div class="search-filter-wrapper">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search anime...">
+                    <button class="search-button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                
+                        <div class="featured-anime">
+            <img src="kimitsu.jpeg" alt="Featured Anime">
+            <div class="featured-info">
+                <h2 class="featured-title">Demon Slayer: Kimetsu no Yaiba</h2>
+                <p class="featured-desc">Tanjiro Kamado's peaceful life is shattered when his family is slaughtered by demons. Now, he fights to avenge his family and cure his sister who has been turned into a demon.</p>
+                <a href="#" class="watch-button">
+                    <i class="bi bi-play-fill"></i> Watch Now
+                </a>
+            </div>
+        </div>
+                
+                
+                <div class="filter-container">
+                    <button class="filter-button active">All</button>
+                    <button class="filter-button">Action</button>
+                    <button class="filter-button">Romance</button>
+                    <button class="filter-button">Comedy</button>
+                    <button class="filter-button">Fantasy</button>
+                    <button class="filter-button">Sci-Fi</button>
+                    <button class="filter-button">Horror</button>
+                    <button class="filter-button">Isekai</button>
+                    <button class="filter-button">Shonen</button>
+                    <button class="filter-button">Slice of Life</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Anime Section -->
+
+
+        <!-- New Releases Section -->
+        <h2 class="section-title">New Releases</h2>
+        <div class="anime-grid">
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="jujutsu-kaisen.jpeg" alt="Jujutsu Kaisen">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">Jujutsu Kaisen</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Action</span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="aot.jpeg" alt="Attack on Titan">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">Attack on Titan</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Action</span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="mha.jpeg" alt="My Hero Academia">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">My Hero Academia</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Shonen</span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="op.jpeg" alt="One Piece">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">One Piece</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Adventure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Section -->
+        <h2 class="section-title">Popular Now</h2>
+        <div class="anime-grid">
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="spy-x-family.jpeg" alt="Spy x Family">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">Spy x Family</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Comedy</span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="csm.jpeg" alt="Chainsaw Man">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">Chainsaw Man</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Horror</span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="tokrev.jpeg" alt="Tokyo Revengers">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">Tokyo Revengers</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Action</span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="vinland-saga.jpeg" alt="Vinland Saga">
+                    <div class="anime-card-overlay">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                </div>
+                <div class="anime-card-info">
+                    <h3 class="anime-card-title">Vinland Saga</h3>
+                    <div class="anime-card-meta">
+                        <span>TV Series</span>
+                        <span class="anime-card-genre">Historical</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <a href="#" class="footer-logo">
+                        <i class="bi bi-play-circle-fill"></i>
+                        AnimeZone
+                    </a>
+                    <p>Your go-to destination for the best anime content. Watch your favorite anime series and movies anytime, anywhere.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-discord"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Movies</a></li>
+                        <li><a href="#">Series</a></li>
+                        <li><a href="#">New Releases</a></li>
+                        <li><a href="#">My List</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Genres</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Romance</a></li>
+                        <li><a href="#">Comedy</a></li>
+                        <li><a href="#">Fantasy</a></li>
+                        <li><a href="#">Horror</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 AnimeZone. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+  <script type="text/javascript" charset="utf-8">
+    // Mobile Menu Toggle
+const mobileMenu = document.getElementById('mobileMenu');
+const navLinks = document.querySelector('.nav-links');
+
+mobileMenu.addEventListener('click', function() {
+    navLinks.classList.toggle('active');
+    const menuIcon = mobileMenu.querySelector('i');
+    if (navLinks.classList.contains('active')) {
+        menuIcon.classList.remove('bi-list');
+        menuIcon.classList.add('bi-x-lg');
+    } else {
+        menuIcon.classList.remove('bi-x-lg');
+        menuIcon.classList.add('bi-list');
+    }
+});
+
+// Filter Button Toggle
+const filterButtons = document.querySelectorAll('.filter-button');
+
+filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Here you would typically filter the anime cards based on the selected genre
+        const selectedGenre = this.textContent;
+        console.log(`Filtering by: ${selectedGenre}`);
+        
+        // Example of filtering functionality (placeholder)
+        if (selectedGenre === 'All') {
+            // Show all anime cards
+            document.querySelectorAll('.anime-card').forEach(card => {
+                card.style.display = 'block';
+            });
+        } else {
+            // Filter anime cards based on genre
+            document.querySelectorAll('.anime-card').forEach(card => {
+                const cardGenre = card.querySelector('.anime-card-genre').textContent;
+                if (cardGenre === selectedGenre) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    });
+});
+
+// Search Functionality
+const searchInput = document.querySelector('.search-input');
+const searchButton = document.querySelector('.search-button');
+const featuredAnime = document.querySelector('.featured-anime');
+
+searchButton.addEventListener('click', function() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    if (searchTerm) {
+        // Hide featured anime section when searching
+        featuredAnime.style.display = 'none';
+        
+        // Search functionality
+        console.log(`Searching for: ${searchTerm}`);
+
+        document.querySelectorAll('.anime-card').forEach(card => {
+            const cardTitle = card.querySelector('.anime-card-title').textContent.toLowerCase();
+            if (cardTitle.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    } else {
+        // Show featured anime when search is empty
+        featuredAnime.style.display = 'block';
+        
+        // Show all anime cards
+        document.querySelectorAll('.anime-card').forEach(card => {
+            card.style.display = 'block';
+        });
+    }
+});
+
+// Allow search on Enter key
+searchInput.addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        searchButton.click();
+    }
+});
+
+// Clear search and restore featured anime when input is cleared
+searchInput.addEventListener('input', function() {
+    if (this.value === '') {
+        featuredAnime.style.display = 'block';
+        
+        // Show all anime cards
+        document.querySelectorAll('.anime-card').forEach(card => {
+            card.style.display = 'block';
+        });
+    }
+});
+
+// Tambahkan kode JavaScript berikut ke dalam file index.html
+// Tempatkan kode ini di dalam tag script yang sudah ada
+
+// Menambahkan event listener untuk setiap anime card
+document.querySelectorAll('.anime-card').forEach(card => {
+    card.addEventListener('click', function() {
+        // Mendapatkan judul anime dari card
+        const animeTitle = this.querySelector('.anime-card-title').textContent;
+        
+        // Konversi judul anime menjadi ID yang sesuai (lowercase dengan dash)
+        let animeId = '';
+        switch (animeTitle) {
+            case 'Jujutsu Kaisen':
+                animeId = 'jujutsu-kaisen';
+                break;
+            case 'Attack on Titan':
+                animeId = 'attack-on-titan';
+                break;
+            case 'My Hero Academia':
+                animeId = 'my-hero-academia';
+                break;
+            case 'One Piece':
+                animeId = 'one-piece';
+                break;
+            case 'Spy x Family':
+                animeId = 'spy-x-family';
+                break;
+            case 'Chainsaw Man':
+                animeId = 'chainsaw-man';
+                break;
+            case 'Tokyo Revengers':
+                animeId = 'tokyo-revengers';
+                break;
+            case 'Vinland Saga':
+                animeId = 'vinland-saga';
+                break;
+            default:
+                // Fallback untuk anime lainnya
+                animeId = animeTitle.toLowerCase().replace(/\s+/g, '-');
+        }
+        
+        // Arahkan ke halaman detail anime dengan ID sebagai parameter
+        window.location.href = `detail.html?id=${animeId}`;
+    });
+});
+
+// Menambahkan event listener untuk featured anime
+document.querySelector('.featured-anime').addEventListener('click', function() {
+    // Featured anime adalah Demon Slayer
+    window.location.href = 'detail.html?id=demon-slayer';
+});
+
+// Ubah style cursor untuk cards dan featured anime agar terlihat clickable
+document.querySelectorAll('.anime-card, .featured-anime').forEach(element => {
+    element.style.cursor = 'pointer';
+});
+
+
+  </script>
+</body>
+</html>

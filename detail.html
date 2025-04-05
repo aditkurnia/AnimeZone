@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeZone - Detail Anime</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+    <style type="text/css" media="all">
+      :root {
+    --primary-red: #e50914;
+    --dark-red: #b81d24;
+    --lighter-red: #ff3d47;
+    --dark-bg: #121212;
+    --darker-bg: #0a0a0a;
+    --light-text: #f5f5f5;
+    --gray-text: #a9a9a9;
+    --accent-orange: #FF5E00;
+    --dark-orange: #e55400;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+}
+
+/* Header & Navigation */
+header {
+    background-color: var(--darker-bg);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-red);
+    text-decoration: none;
+}
+
+.logo i {
+    margin-right: 8px;
+    font-size: 1.8rem;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links li a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: var(--primary-red);
+}
+
+.nav-links li a.active {
+    color: var(--primary-red);
+}
+
+.mobile-menu {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--light-text);
+}
+
+/* Anime Detail Section */
+.anime-detail {
+    margin: 30px 0;
+    display: flex;
+    gap: 30px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.anime-poster {
+    flex: 0 0 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.anime-poster img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.anime-info {
+    flex: 1;
+}
+
+.anime-title {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--light-text);
+    line-height: 1.2;
+}
+
+.anime-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.anime-meta-item {
+    display: flex;
+    align-items: center;
+    color: var(--gray-text);
+    font-size: 0.9rem;
+}
+
+.anime-meta-item i {
+    margin-right: 5px;
+    color: var(--primary-red);
+}
+
+.anime-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.anime-tag {
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.anime-description {
+    margin-bottom: 25px;
+    line-height: 1.6;
+    color: var(--gray-text);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.watch-button, .add-list-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.watch-button {
+    background-color: var(--primary-red);
+    color: var(--light-text);
+}
+
+.watch-button:hover {
+    background-color: var(--dark-red);
+    transform: translateY(-2px);
+}
+
+.add-list-button {
+    background-color: transparent;
+    color: var(--light-text);
+    border: 1px solid var(--gray-text);
+}
+
+.add-list-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.action-buttons i {
+    margin-right: 8px;
+}
+
+/* Video Player Section */
+#animeDetailContainer {
+    margin-bottom: 40px;
+}
+
+.video-title {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-red);
+}
+
+.video-player-wrapper {
+    width: 100%;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+}
+
+.video-player {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: #000;
+}
+
+.video-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.video-progress {
+    width: 100%;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.video-progress-bar {
+    position: absolute;
+    height: 100%;
+    background-color: var(--accent-orange);
+    border-radius: 5px;
+    width: 15%; /* Starting position */
+}
+
+.episode-info-panel {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-orange);
+    margin-bottom: 30px;
+}
+
+.episode-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--light-text);
+}
+
+.episode-meta-full {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    color: var(--gray-text);
+}
+
+.episode-meta-full span {
+    display: flex;
+    align-items: center;
+}
+
+.episode-meta-full i {
+    margin-right: 8px;
+    color: var(--accent-orange);
+}
+
+.episode-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 30px;
+}
+
+.nav-button {
+    background-color: var(--accent-orange);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--dark-orange);
+    transform: translateY(-2px);
+}
+
+.nav-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.nav-button i {
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+/* Episodes Section */
+.section-title {
+    font-size: 1.6rem;
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: var(--primary-red);
+}
+
+.episodes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.episode-card {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.episode-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.episode-card.active {
+    border: 1px solid var(--accent-orange);
+    box-shadow: 0 0 15px rgba(255, 94, 0, 0.4);
+}
+
+.episode-thumbnail {
+    position: relative;
+    height: 160px;
+    overflow: hidden;
+}
+
+.episode-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.episode-card:hover .episode-thumbnail img {
+    transform: scale(1.05);
+}
+
+.episode-duration {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--light-text);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.episode-number {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--primary-red);
+    color: var(--light-text);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.episode-info {
+    padding: 15px;
+}
+
+.episode-title {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.episode-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--gray-text);
+}
+
+.next-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: var(--accent-orange);
+    color: white;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.next-button:hover {
+    background-color: var(--dark-orange);
+    transform: translateY(-2px);
+}
+
+.next-button i {
+    font-size: 1.2rem;
+}
+
+/* Footer */
+footer {
+    background-color: var(--darker-bg);
+    padding: 40px 0 20px;
+    margin-top: 60px;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-red);
+    text-decoration: none;
+}
+
+.footer-logo i {
+    margin-right: 8px;
+    font-size: 1.8rem;
+}
+
+.footer-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--light-text);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-column h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary-red);
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links li a {
+    color: var(--gray-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.footer-links li a:hover {
+    color: var(--primary-red);
+    transform: translateX(5px);
+}
+
+.footer-links li a i {
+    margin-right: 8px;
+    font-size: 0.8rem;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-icons a {
+    color: var(--light-text);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icons a:hover {
+    color: var(--primary-red);
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.copyright {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--gray-text);
+    font-size: 0.9rem;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .anime-detail {
+        gap: 20px;
+        padding: 15px;
+    }
+    
+    .anime-poster {
+        flex: 0 0 220px;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+    }
+    
+    .episodes-list {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background-color: var(--darker-bg);
+        padding: 20px 0;
+        gap: 15px;
+        text-align: center;
+        z-index: 1000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .anime-detail {
+        flex-direction: column;
+    }
+
+    .anime-poster {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+    
+    .anime-title {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+    
+    .anime-meta {
+        justify-content: center;
+    }
+    
+    .anime-tags {
+        justify-content: center;
+    }
+    
+    .episodes-list {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    
+    .episode-navigation {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .video-title {
+        font-size: 1.8rem;
+    }
+    
+    .episode-meta-full {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .anime-title {
+        font-size: 1.5rem;
+    }
+
+    .episodes-list {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .watch-button, .add-list-button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .episode-title {
+        font-size: 1.3rem;
+    }
+    
+    .episode-info-panel {
+        padding: 15px;
+    }
+}
+
+/* Specific Fixes for the Video Player Page */
+.video-container {
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+}
+
+.video-container iframe,
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#episodesContainer {
+    margin-top: 40px;
+}
+
+#episodesContainer h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#episodesContainer h2 i {
+    color: var(--primary-red);
+}
+
+#episodesList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Player Controls */
+.custom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 0 0 8px 8px;
+}
+
+.control-left, .control-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.control-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.control-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.control-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.play-pause {
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.playback-bar {
+    width: 100%;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.playback-progress {
+    position: absolute;
+    height: 100%;
+    background-color: var(--accent-orange);
+    border-radius: 5px;
+    width: 30%;
+}
+
+.playback-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-orange);
+    border-radius: 50%;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.playback-bar:hover .playback-handle {
+    opacity: 1;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volume-slider {
+    width: 70px;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+}
+
+.volume-level {
+    position: absolute;
+    height: 100%;
+    background-color: white;
+    border-radius: 5px;
+    width: 70%;
+}
+
+.time-display {
+    color: white;
+    font-size: 0.85rem;
+}
+
+.to-you-title {
+    font-size: 1.8rem;
+    margin: 20px 0;
+    color: white;
+    font-weight: bold;
+}
+
+.episode-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.episode-info-item {
+    display: flex;
+    align-items: center;
+    color: var(--gray-text);
+    gap: 8px;
+    font-size: 1rem;
+}
+
+.episode-info-item i {
+    color: var(--accent-orange);
+}
+.back-button{
+  Margin:10px;
+  background-color: var(--accent-orange);
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+}
+.back-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.back-button.active {
+    border: 1px solid var(--accent-orange);
+    box-shadow: 0 0 15px rgba(255, 94, 0, 0.4);
+}
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="bi bi-play-circle-fill"></i>
+                AnimeZone
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">Series</a></li>
+                <li><a href="#">New Releases</a></li>
+                <li><a href="#">My List</a></li>
+            </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="bi bi-list"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Anime Detail Section -->
+        <div id="animeDetailContainer">
+            <!-- Content will be loaded dynamically -->
+        </div>
+
+        <!-- Episodes Section -->
+        <div id="episodesContainer">
+            <h2>Episodes</h2>
+            <div id="episodesList">
+                <!-- Episodes will be loaded dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <a href="index.html" class="footer-logo">
+                        <i class="bi bi-play-circle-fill"></i>
+                        AnimeZone
+                    </a>
+                    <p>Your go-to destination for the best anime content. Watch your favorite anime series and movies anytime, anywhere.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-discord"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">Movies</a></li>
+                        <li><a href="#">Series</a></li>
+                        <li><a href="#">New Releases</a></li>
+                        <li><a href="#">My List</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Genres</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Romance</a></li>
+                        <li><a href="#">Comedy</a></li>
+                        <li><a href="#">Fantasy</a></li>
+                        <li><a href="#">Horror</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 AnimeZone. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+<script src="database.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
