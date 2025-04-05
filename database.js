@@ -235,6 +235,7 @@ const animeDatabase = {
 };
 
 // Track current playing video iframe
+// Track current playing video iframe
 let currentVideoIframe = null;
 
 // Mobile Menu Toggle
@@ -451,7 +452,7 @@ function watchEpisode(animeId, episodeNumber, youtubeId) {
         }
     }
     
-    // Create watch content with YouTube player
+    // Create watch content with YouTube player and loading animation
     const watchHTML = `
         <div class="watch-header">
             <button class="back-button" onclick="backToAnimeDetails()">
@@ -461,7 +462,20 @@ function watchEpisode(animeId, episodeNumber, youtubeId) {
         </div>
         <div class="video-player-container">
             <div class="youtube-player">
-                <iframe id="youtubeIframe" src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0" frameborder="0" width="100%" height="100%" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                <!-- Loading Animation -->
+                <div id="videoLoading" class="video-loading">
+                    <img src="loading.png" alt="Loading" class="loading-img pulse-animation">
+                    <div class="loading-text">Loading...</div>
+                </div>
+                <!-- YouTube iframe -->
+                <iframe id="youtubeIframe" 
+                        src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0" 
+                        frameborder="0" 
+                        width="100%" 
+                        height="100%" 
+                        allowfullscreen 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        onload="hideVideoLoading()"></iframe>
             </div>
         </div>
         <div class="episode-navigation">
@@ -491,6 +505,19 @@ function watchEpisode(animeId, episodeNumber, youtubeId) {
     
     // Scroll to top
     window.scrollTo(0, 0);
+}
+
+// Function to hide loading animation when video loads
+function hideVideoLoading() {
+    const loadingElement = document.getElementById('videoLoading');
+    if (loadingElement) {
+        // First reduce opacity
+        loadingElement.style.opacity = '0';
+        // Then hide completely after animation completes
+        setTimeout(() => {
+            loadingElement.style.display = 'none';
+        }, 500); // 500ms matches the transition duration in CSS
+    }
 }
 
 // Function to go back to anime details
@@ -530,4 +557,77 @@ document.addEventListener('DOMContentLoaded', () => {
         container.style.display = 'none';
         document.querySelector('main').appendChild(container);
     }
+    
+    // Add CSS for loading animation
+    addLoadingAnimationStyles();
 });
+
+// Add CSS for loading animation
+function addLoadingAnimationStyles() {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        /* Video Loading Animation */
+        .video-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(20, 20, 30, 0.9);
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-img {
+            max-width: 150px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        /* Pulse Animation */
+        .pulse-animation {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.4;
+            }
+        }
+        
+        /* Ensure the video player container is properly positioned for overlay */
+        .youtube-player {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .youtube-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    `;
+    document.head.appendChild(styleElement);
+}
